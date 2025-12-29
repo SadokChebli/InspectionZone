@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on: [zookeeper]
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  simulator:
+    container_name: simulator
+    build: ./simulator
+    image: simulator:latest
+    depends_on: [kafka]
+
+  verifier:
+    container_name: verifier
+    build: ./verifier
+    image: verifier:latest
+    depends_on: [kafka]
+
+  classifier:
+    container_name: classifier
+    build: ./classifier
+    image: classifier:latest
+    depends_on: [kafka]
+
+  modifier:
+    container_name: modifier
+    build: ./modifier
+    image: modifier:latest
+    depends_on: [kafka]
+
+  router:
+    container_name: router
+    build: ./router
+    image: router:latest
+    depends_on: [kafka]
