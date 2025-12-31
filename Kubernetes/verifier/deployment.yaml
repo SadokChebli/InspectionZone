@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verifier
+  namespace: inspection-zone
+  labels:
+    app: verifier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: verifier
+  template:
+    metadata:
+      labels:
+        app: verifier
+    spec:
+      containers:
+        - name: verifier
+          image: verifier:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            # AJOUTEZ CECI : L'adresse de votre nouveau service Kafka
+            - name: KAFKA_BOOTSTRAP_SERVERS 
+              value: "kafka-svc.inspection-zone.svc.cluster.local:9092"
+            # Ajoutez d'autres variables si votre code en a besoin
+            - name: KAFKA_TOPIC
+              value: "votre-topic-de-test"

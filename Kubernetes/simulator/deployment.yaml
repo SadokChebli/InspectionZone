@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator
+  namespace: inspection-zone
+  labels:
+    app: simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+        - name: simulator
+          image: simulator:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            # Adresse du nouveau service Kafka
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-svc.inspection-zone.svc.cluster.local:9092"
+            # Si votre code utilise d'autres noms de variables, ajoutez-les ici :
+            - name: KAFKA_HOST
+              value: "kafka-svc"
+            - name: KAFKA_PORT
+              value: "9092"
+            # Si le simulator doit envoyer des données au verifier ou classifier :
+            - name: VERIFIER_URL
+              value: "http://verifier:8080"
+            - name: CLASSIFIER_URL
+              value: "http://classifier:8080"

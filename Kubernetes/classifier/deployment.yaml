@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: classifier
+  namespace: inspection-zone
+  labels:
+    app: classifier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: classifier
+  template:
+    metadata:
+      labels:
+        app: classifier
+    spec:
+      containers:
+        - name: classifier
+          image: classifier:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-svc.inspection-zone.svc.cluster.local:9092"

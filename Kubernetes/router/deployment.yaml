@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: router
+  namespace: inspection-zone
+  labels:
+    app: router
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: router
+  template:
+    metadata:
+      labels:
+        app: router
+    spec:
+      containers:
+        - name: router
+          image: router:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-svc.inspection-zone.svc.cluster.local:9092"
+            # URLs des services voisins si nécessaire
+            - name: MODIFIER_URL
+              value: "http://modifier:8080"
+            - name: CLASSIFIER_URL
+              value: "http://classifier:8080"
