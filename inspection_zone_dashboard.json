@@ -1,0 +1,85 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "inspection-zone",
+    "title": "Inspection Zone Microservices",
+    "tags": ["microservices", "inspection", "FastAPI"],
+    "timezone": "browser",
+    "schemaVersion": 36,
+    "version": 1,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Packets Generated (Simulator)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(inspection_packets_generated_total[1m])",
+            "legendFormat": "simulator",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"x": 0,"y": 0,"w": 12,"h": 6}
+      },
+      {
+        "type": "graph",
+        "title": "Packets Verified (Verifier)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(inspection_packets_verified_total[1m])",
+            "legendFormat": "verifier",
+            "refId": "B"
+          },
+          {
+            "expr": "rate(inspection_packets_rejected_total[1m])",
+            "legendFormat": "verifier rejected",
+            "refId": "C"
+          }
+        ],
+        "gridPos": {"x": 12,"y": 0,"w": 12,"h": 6}
+      },
+      {
+        "type": "graph",
+        "title": "Packets Classified (Classifier)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(inspection_packets_classified_total[1m])",
+            "legendFormat": "classifier",
+            "refId": "D"
+          }
+        ],
+        "gridPos": {"x": 0,"y": 6,"w": 12,"h": 6}
+      },
+      {
+        "type": "graph",
+        "title": "Packets Modified (Modifier)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(inspection_packets_modified_total[1m])",
+            "legendFormat": "modifier",
+            "refId": "E"
+          }
+        ],
+        "gridPos": {"x": 12,"y": 6,"w": 12,"h": 6}
+      },
+      {
+        "type": "graph",
+        "title": "Packets Routed (Router)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(inspection_packets_routed_total[1m])",
+            "legendFormat": "router",
+            "refId": "F"
+          }
+        ],
+        "gridPos": {"x": 0,"y": 12,"w": 24,"h": 6}
+      }
+    ]
+  },
+  "overwrite": true
+}

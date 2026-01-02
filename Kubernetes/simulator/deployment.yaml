@@ -20,7 +20,7 @@ spec:
           image: simulator:latest
           imagePullPolicy: Never
           ports:
-            - containerPort: 8080
+            - containerPort: 8000
           env:
             # Adresse du nouveau service Kafka
             - name: KAFKA_BOOTSTRAP_SERVERS

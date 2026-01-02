@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: inspection-zone
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+
+    scrape_configs:
+      - job_name: "fastapi-microservices"
+        kubernetes_sd_configs:
+          - role: endpoints
+            namespaces:
+              names:
+                - inspection-zone
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: simulator|verifier|classifier|modifier|router
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: http
+          # Add service name as a label
+          - source_labels: [__meta_kubernetes_service_name]
+            target_label: service
+            action: replace
+          # Add namespace as a label
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+            action: replace
